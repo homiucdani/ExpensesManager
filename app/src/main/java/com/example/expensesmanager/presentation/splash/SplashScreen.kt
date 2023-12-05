@@ -55,7 +55,7 @@ fun SplashScreen() {
         verticalArrangement = Arrangement.Center
     ) {
         Image(
-            modifier = Modifier.alpha(fadeInAnimation).size(MaterialTheme.dimens.splashIcon),
+            modifier = Modifier.alpha(fadeInAnimation).size(MaterialTheme.dimens.logoLarge),
             painter = painterResource(id = R.drawable.ic_logo),
             contentDescription = stringResource(R.string.logo)
         )

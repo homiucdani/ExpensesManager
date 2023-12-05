@@ -12,7 +12,8 @@ data class Dimens(
     val medium2: Dp = 0.dp,
     val medium3: Dp = 0.dp,
     val large: Dp = 0.dp,
-    val splashIcon:Dp = 0.dp
+    val logoMedium:Dp = 0.dp,
+    val logoLarge:Dp = 0.dp
 )
 
 val CompactSmallDimens = Dimens(
@@ -24,7 +25,8 @@ val CompactSmallDimens = Dimens(
     medium2 = 26.dp,
     medium3 = 30.dp,
     large = 45.dp,
-    splashIcon = 100.dp
+    logoMedium = 80.dp,
+    logoLarge = 100.dp
 )
 
 val CompactMediumDimens = Dimens(
@@ -36,7 +38,8 @@ val CompactMediumDimens = Dimens(
     medium2 = 28.dp,
     medium3 = 35.dp,
     large = 65.dp,
-    splashIcon = 160.dp
+    logoMedium = 130.dp,
+    logoLarge = 160.dp
 )
 
 val CompactStandardDimens = Dimens(
@@ -48,7 +51,8 @@ val CompactStandardDimens = Dimens(
     medium2 = 36.dp,
     medium3 = 40.dp,
     large = 80.dp,
-    splashIcon = 190.dp
+    logoMedium = 160.dp,
+    logoLarge = 190.dp
 )
 
 // tablets
@@ -61,7 +65,8 @@ val MediumDimens = Dimens(
     medium2 = 36.dp,
     medium3 = 40.dp,
     large = 110.dp,
-    splashIcon = 230.dp
+    logoMedium = 200.dp,
+    logoLarge = 230.dp
 )
 
 val ExpandedDimens = Dimens(
@@ -73,5 +78,6 @@ val ExpandedDimens = Dimens(
     medium2 = 30.dp,
     medium3 = 45.dp,
     large = 130.dp,
-    splashIcon = 250.dp
+    logoMedium = 220.dp,
+    logoLarge = 250.dp
 )

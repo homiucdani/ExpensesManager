@@ -43,7 +43,7 @@ val CompactMediumTypography = Typography(
     titleMedium = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Medium,
-        fontSize = 14.sp
+        fontSize = 18.sp
     ),
     labelMedium = TextStyle(
         fontWeight = FontWeight.Normal,
@@ -65,7 +65,7 @@ val CompactStandardTypography = Typography(
     titleMedium = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Medium,
-        fontSize = 14.sp
+        fontSize = 20.sp
     ),
     labelMedium = TextStyle(
         fontFamily = FontFamily.Default,
@@ -88,7 +88,7 @@ val MediumTypography = Typography(
     titleMedium = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Medium,
-        fontSize = 16.sp
+        fontSize = 22.sp
     ),
     labelMedium = TextStyle(
         fontFamily = FontFamily.Default,
@@ -111,7 +111,7 @@ val ExpandedTypography = Typography(
     titleMedium = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Medium,
-        fontSize = 18.sp
+        fontSize = 24.sp
     ),
     labelMedium = TextStyle(
         fontFamily = FontFamily.Default,
