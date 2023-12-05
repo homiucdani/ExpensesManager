@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Expenses Manager</string>
+    <string name="logo">Logo</string>
+    <string name="spend_with_brain">Spend with brain</string>
 </resources>

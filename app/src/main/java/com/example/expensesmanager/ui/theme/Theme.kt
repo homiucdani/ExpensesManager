@@ -151,3 +151,6 @@ fun ExpensesManagerTheme(
         )
     }
 }
+
+val MaterialTheme.dimens
+    @Composable get() = LocalAppDimens.current
