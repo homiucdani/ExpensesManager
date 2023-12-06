@@ -39,6 +39,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import com.example.expensesmanager.R
 import com.example.expensesmanager.ui.theme.dimens
 
@@ -160,7 +161,7 @@ fun LoginScreen(
                 .align(Alignment.CenterHorizontally)
                 .fillMaxWidth(0.5f),
             onClick = {
-
+                onEvent(LoginEvent.OnLoginClick)
             },
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.onSecondaryContainer)
         ) {
@@ -201,7 +202,8 @@ private fun DetailsSection(
             style = TextStyle(
                 fontSize = MaterialTheme.typography.titleMedium.fontSize
             ),
-            color = MaterialTheme.colorScheme.onPrimary
+            color = MaterialTheme.colorScheme.onPrimary,
+            textDecoration = TextDecoration.Underline
         )
 
         Spacer(modifier = Modifier.height(MaterialTheme.dimens.small3))
@@ -227,7 +229,8 @@ private fun DetailsSection(
                 style = TextStyle(
                     fontSize = MaterialTheme.typography.titleMedium.fontSize
                 ),
-                color = MaterialTheme.colorScheme.onPrimary
+                color = MaterialTheme.colorScheme.onPrimary,
+                textDecoration = TextDecoration.Underline
             )
         }
     }

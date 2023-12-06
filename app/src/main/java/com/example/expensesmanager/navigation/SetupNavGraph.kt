@@ -3,7 +3,7 @@ package com.example.expensesmanager.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -52,7 +52,7 @@ fun NavGraphBuilder.login() {
     composable(
         route = Screen.Login.route
     ) {
-        val loginViewModel: LoginViewModel = viewModel()
+        val loginViewModel: LoginViewModel = hiltViewModel()
         val state = loginViewModel.state.collectAsState().value
 
         LoginScreen(
