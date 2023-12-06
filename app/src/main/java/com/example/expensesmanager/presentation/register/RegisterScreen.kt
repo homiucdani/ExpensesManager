@@ -104,6 +104,17 @@ fun RegisterScreen(
             shape = RoundedCornerShape(MaterialTheme.dimens.small1)
         )
 
+        if (state.nameError != null) {
+            Text(
+                modifier = Modifier.padding(horizontal = MaterialTheme.dimens.medium2),
+                text = state.nameError,
+                style = TextStyle(
+                    fontSize = MaterialTheme.typography.titleMedium.fontSize,
+                ),
+                color = MaterialTheme.colorScheme.error
+            )
+        }
+
         Spacer(modifier = Modifier.height(MaterialTheme.dimens.medium3))
 
         TextField(
@@ -181,7 +192,8 @@ fun RegisterScreen(
             onClick = {
                 onEvent(RegisterEvent.OnRegisterClick)
             },
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.onSecondaryContainer)
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.onSecondaryContainer),
+            enabled = !state.isLoading
         ) {
             Text(text = stringResource(R.string.register))
         }

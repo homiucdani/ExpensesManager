@@ -3,7 +3,7 @@ package com.example.expensesmanager.domain.repository
 import com.example.expensesmanager.domain.model.User
 
 interface UserRepository {
-    suspend fun insertUser(userEntity: User)
+    suspend fun insertUser(user: User)
 
     suspend fun login(email: String, password: String): User?
 

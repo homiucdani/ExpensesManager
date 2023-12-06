@@ -2,6 +2,7 @@ package com.example.expensesmanager.di
 
 import com.example.expensesmanager.domain.use_case.FormValidation
 import com.example.expensesmanager.domain.use_case.ValidateLoginForm
+import com.example.expensesmanager.domain.use_case.ValidateRegisterForm
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,7 +17,8 @@ object UseCaseModule {
     @Provides
     fun providesFormValidation(): FormValidation {
         return FormValidation(
-            validateLoginForm = ValidateLoginForm()
+            validateLoginForm = ValidateLoginForm(),
+            validateRegisterForm = ValidateRegisterForm()
         )
     }
 }

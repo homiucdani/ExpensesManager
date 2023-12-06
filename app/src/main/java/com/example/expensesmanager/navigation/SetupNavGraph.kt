@@ -5,7 +5,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -101,6 +100,8 @@ fun NavGraphBuilder.login(
                     is UiEvent.NavigateToMainScreen -> {
                         navigateToMainScreen(event.id)
                     }
+
+                    else -> Unit
                 }
             }
         }
@@ -121,13 +122,25 @@ fun NavGraphBuilder.login(
 }
 
 fun NavGraphBuilder.register(
-    navigateToLogin: () -> Unit
+    navigateToLogin: () -> Unit,
 ) {
     composable(
         route = Screen.Register.route
     ) {
-        val registerViewModel: RegisterViewModel = viewModel()
+        val registerViewModel: RegisterViewModel = hiltViewModel()
         val state = registerViewModel.state.collectAsState().value
+
+        LaunchedEffect(key1 = true) {
+            registerViewModel.uiEvent.collectLatest { event ->
+                when (event) {
+                    UiEvent.NavigateToLogin -> {
+                        navigateToLogin()
+                    }
+
+                    else -> Unit
+                }
+            }
+        }
 
         RegisterScreen(
             state = state,

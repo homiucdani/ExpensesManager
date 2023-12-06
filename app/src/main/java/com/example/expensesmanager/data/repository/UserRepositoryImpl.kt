@@ -10,8 +10,8 @@ class UserRepositoryImpl(
     private val userDao: UserDao
 ) : UserRepository {
 
-    override suspend fun insertUser(userEntity: User) {
-        userDao.insertUser(userEntity.toUserEntity())
+    override suspend fun insertUser(user: User) {
+        userDao.insertUser(user.toUserEntity())
     }
 
     override suspend fun getUserByEmail(email: String): User? {
