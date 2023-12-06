@@ -162,7 +162,8 @@ fun LoginScreen(
             onClick = {
                 onEvent(LoginEvent.OnLoginClick)
             },
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.onSecondaryContainer)
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.onSecondaryContainer),
+            enabled = !state.isLoading
         ) {
             Text(text = stringResource(id = R.string.login))
         }
