@@ -1,4 +1,4 @@
-package com.example.expensesmanager.presentation.login
+package com.example.expensesmanager.presentation.register
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -39,21 +39,20 @@ import com.example.expensesmanager.core.presentation.components.DetailsSection
 import com.example.expensesmanager.ui.theme.dimens
 
 @Composable
-fun LoginScreen(
-    state: LoginState,
-    onEvent: (LoginEvent) -> Unit
+fun RegisterScreen(
+    state: RegisterState,
+    onEvent: (RegisterEvent) -> Unit
 ) {
-
     var passwordVisibility by remember {
+        mutableStateOf(true)
+    }
+
+    var canClick by remember {
         mutableStateOf(true)
     }
 
     val passIcon =
         if (passwordVisibility) R.drawable.ic_key_visible else R.drawable.ic_key_invisible
-
-    var canClick by remember {
-        mutableStateOf(true)
-    }
 
     Column(
         modifier = Modifier
@@ -76,7 +75,7 @@ fun LoginScreen(
                 .fillMaxWidth()
                 .align(Alignment.CenterHorizontally)
                 .padding(horizontal = MaterialTheme.dimens.medium2),
-            text = stringResource(R.string.enter_your_credentials_to_become_again_active),
+            text = stringResource(R.string.let_us_know_more_about_you),
             style = TextStyle(
                 fontWeight = FontWeight.Light,
                 fontSize = MaterialTheme.typography.titleMedium.fontSize
@@ -91,9 +90,29 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = MaterialTheme.dimens.medium2),
+            value = state.name,
+            onValueChange = { name ->
+                onEvent(RegisterEvent.OnNameChange(name))
+            },
+            label = {
+                Text(text = stringResource(R.string.name))
+            },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Email,
+                imeAction = ImeAction.Next
+            ),
+            shape = RoundedCornerShape(MaterialTheme.dimens.small1)
+        )
+
+        Spacer(modifier = Modifier.height(MaterialTheme.dimens.medium3))
+
+        TextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = MaterialTheme.dimens.medium2),
             value = state.email,
             onValueChange = { email ->
-                onEvent(LoginEvent.OnEmailChange(email))
+                onEvent(RegisterEvent.OnEmailChange(email))
             },
             label = {
                 Text(text = stringResource(R.string.email))
@@ -124,7 +143,7 @@ fun LoginScreen(
                 .padding(horizontal = MaterialTheme.dimens.medium2),
             value = state.password,
             onValueChange = { password ->
-                onEvent(LoginEvent.OnPasswordChange(password))
+                onEvent(RegisterEvent.OnPasswordChange(password))
             },
             label = {
                 Text(text = stringResource(R.string.password))
@@ -160,25 +179,25 @@ fun LoginScreen(
                 .align(Alignment.CenterHorizontally)
                 .fillMaxWidth(0.5f),
             onClick = {
-                onEvent(LoginEvent.OnLoginClick)
+                onEvent(RegisterEvent.OnRegisterClick)
             },
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.onSecondaryContainer)
         ) {
-            Text(text = stringResource(id = R.string.login))
+            Text(text = stringResource(R.string.register))
         }
 
         Spacer(modifier = Modifier.height(MaterialTheme.dimens.medium3))
 
         DetailsSection(
-            actionName = stringResource(id = R.string.register),
-            question = stringResource(id = R.string.have_no_account),
+            actionName = stringResource(R.string.login),
+            question = stringResource(R.string.have_already_an_account),
             onForgotPasswordClick = {
 
             },
             onActionClick = {
-                onEvent(LoginEvent.NavigateToRegister)
+                onEvent(RegisterEvent.NavigateToLogin)
             },
-            showForgotPassword = true,
+            showForgotPassword = false,
             onButtonEnabled = canClick,
             onButtonEnabledChange = { disableButton ->
                 canClick = disableButton

@@ -37,6 +37,8 @@ class LoginViewModel @Inject constructor(
             LoginEvent.OnLoginClick -> {
                 checkValidation(state.value.email, state.value.password)
             }
+
+            else -> Unit
         }
     }
 
