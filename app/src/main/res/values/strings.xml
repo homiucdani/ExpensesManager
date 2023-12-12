@@ -8,4 +8,13 @@
     <string name="register">Register</string>
     <string name="password">Password</string>
     <string name="email">Email</string>
+    <string name="let_us_know_more_about_you">Let us know more about you</string>
+    <string name="name">Name</string>
+    <string name="login">Login</string>
+    <string name="have_already_an_account">Have already an account?</string>
+    <string name="converter">Converter</string>
+    <string name="main_page">Main Page</string>
+    <string name="logout">Logout</string>
+    <string name="my_budget">My Budget</string>
+    <string name="my_expenses">My Expenses</string>
 </resources>

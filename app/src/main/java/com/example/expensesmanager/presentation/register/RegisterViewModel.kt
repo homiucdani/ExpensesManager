@@ -1,10 +1,9 @@
-package com.example.expensesmanager.presentation.login
+package com.example.expensesmanager.presentation.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.expensesmanager.core.presentation.util.UiEvent
-import com.example.expensesmanager.domain.model.UserOnBoard
-import com.example.expensesmanager.domain.repository.DataStorePref
+import com.example.expensesmanager.domain.model.User
 import com.example.expensesmanager.domain.repository.UserRepository
 import com.example.expensesmanager.domain.use_case.FormValidation
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,21 +18,29 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(
+class RegisterViewModel @Inject constructor(
     private val formValidation: FormValidation,
-    private val userRepository: UserRepository,
-    private val dataStorePref: DataStorePref
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(LoginState())
-    val state: StateFlow<LoginState> = _state
+    private val _state = MutableStateFlow(RegisterState())
+    val state: StateFlow<RegisterState> = _state
 
     private val _uiEvent = MutableSharedFlow<UiEvent>()
     val uiEvent: SharedFlow<UiEvent> = _uiEvent
 
-    fun onEvent(event: LoginEvent) {
+    fun onEvent(event: RegisterEvent) {
         when (event) {
-            is LoginEvent.OnEmailChange -> {
+
+            is RegisterEvent.OnNameChange -> {
+                _state.update {
+                    it.copy(
+                        name = event.name
+                    )
+                }
+            }
+
+            is RegisterEvent.OnEmailChange -> {
                 _state.update {
                     it.copy(
                         email = event.email
@@ -41,7 +48,7 @@ class LoginViewModel @Inject constructor(
                 }
             }
 
-            is LoginEvent.OnPasswordChange -> {
+            is RegisterEvent.OnPasswordChange -> {
                 _state.update {
                     it.copy(
                         password = event.password
@@ -49,54 +56,60 @@ class LoginViewModel @Inject constructor(
                 }
             }
 
-            LoginEvent.OnLoginClick -> {
-                checkValidation(state.value.email, state.value.password)
+            RegisterEvent.OnRegisterClick -> {
+                checkValidation(
+                    name = state.value.name,
+                    email = state.value.email,
+                    password = state.value.password
+                )
             }
 
             else -> Unit
         }
     }
 
-    private fun checkValidation(email: String, password: String) {
+    private fun checkValidation(name: String, email: String, password: String) {
         _state.update {
             it.copy(
                 isLoading = true
             )
         }
 
-        val result = formValidation.validateLoginForm(email, password)
+        val result = formValidation.validateRegisterForm(name, email, password)
 
         if (result.successful) {
             viewModelScope.launch(Dispatchers.IO) {
 
-                val user = userRepository.login(email, password)
+                val user = userRepository.getUserByEmail(email)
 
-                withContext(Dispatchers.Main) {
-                    if (user != null) {
-                        // persist data on app launches
-                        dataStorePref.saveUserOnBoard(
-                            UserOnBoard(
-                                onBoardSuccessfully = true,
-                                userId = user.id
-                            )
-                        )
-
-                        // navigate to main with the id if the user exists
-                        _uiEvent.emit(UiEvent.NavigateToMainScreen(user.id))
-
+                if (user != null) {
+                    withContext(Dispatchers.Main) {
                         _state.update {
                             it.copy(
-                                isSuccessfullyLoggedIn = true,
+                                nameError = null,
                                 emailError = null,
-                                passwordError = null,
+                                passwordError = "User already exists.",
                                 isLoading = false
                             )
                         }
-                    } else {
+                    }
+                } else {
+                    userRepository.insertUser(
+                        User(
+                            id = 0,
+                            name = name,
+                            email = email,
+                            password = password
+                        )
+                    )
+                    withContext(Dispatchers.Main) {
+                        // navigate to login
+                        _uiEvent.emit(UiEvent.NavigateToLogin)
+
                         _state.update {
                             it.copy(
-                                isSuccessfullyLoggedIn = false,
-                                passwordError = "Wrong email or password",
+                                nameError = null,
+                                passwordError = null,
                                 isLoading = false,
                                 emailError = null
                             )
@@ -107,6 +120,7 @@ class LoginViewModel @Inject constructor(
         } else {
             _state.update {
                 it.copy(
+                    nameError = result.nameError,
                     emailError = result.emailError,
                     passwordError = result.passwordError,
                     isLoading = false
