@@ -3,6 +3,8 @@ package com.example.expensesmanager.presentation.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.expensesmanager.core.presentation.util.UiEvent
+import com.example.expensesmanager.domain.model.UserOnBoard
+import com.example.expensesmanager.domain.repository.DataStorePref
 import com.example.expensesmanager.domain.repository.UserRepository
 import com.example.expensesmanager.domain.use_case.FormValidation
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +21,8 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val formValidation: FormValidation,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val dataStorePref: DataStorePref
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(LoginState())
@@ -70,6 +73,14 @@ class LoginViewModel @Inject constructor(
 
                 withContext(Dispatchers.Main) {
                     if (user != null) {
+                        // persist data on app launches
+                        dataStorePref.saveUserOnBoard(
+                            UserOnBoard(
+                                onBoardSuccessfully = true,
+                                userId = user.id
+                            )
+                        )
+
                         // navigate to main with the id if the user exists
                         _uiEvent.emit(UiEvent.NavigateToMainScreen(user.id))
 

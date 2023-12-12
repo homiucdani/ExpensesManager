@@ -1,6 +1,5 @@
 package com.example.expensesmanager.navigation
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -15,38 +14,51 @@ import com.example.expensesmanager.core.presentation.util.UiEvent
 import com.example.expensesmanager.presentation.login.LoginEvent
 import com.example.expensesmanager.presentation.login.LoginScreen
 import com.example.expensesmanager.presentation.login.LoginViewModel
+import com.example.expensesmanager.presentation.main.MainScreen
 import com.example.expensesmanager.presentation.register.RegisterEvent
 import com.example.expensesmanager.presentation.register.RegisterScreen
 import com.example.expensesmanager.presentation.register.RegisterViewModel
 import com.example.expensesmanager.presentation.splash.SplashScreen
+import com.example.expensesmanager.presentation.splash.SplashViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun SetupNavGraph(
-    navController: NavHostController
+    setupNavController: NavHostController,
+    mainNavController: NavHostController
 ) {
     NavHost(
-        navController = navController,
+        navController = setupNavController,
         startDestination = Screen.Splash.route
     ) {
-        splash {
-            navController.navigate(Screen.Login.route) {
-                popUpTo(route = Screen.Splash.route) {
-                    inclusive = true
+        splash(
+            navigateToLogin = {
+                setupNavController.navigate(Screen.Login.route) {
+                    popUpTo(route = Screen.Splash.route) {
+                        inclusive = true
+                    }
+                }
+            },
+            navigateToMain = { userId ->
+                setupNavController.navigate(Screen.Main.passUserId(userId)) {
+                    popUpTo(route = Screen.Splash.route) {
+                        inclusive = true
+                    }
                 }
             }
-        }
+        )
+
         login(
             navigateToRegister = {
-                navController.navigate(Screen.Register.route) {
+                setupNavController.navigate(Screen.Register.route) {
                     popUpTo(route = Screen.Login.route) {
                         inclusive = true
                     }
                 }
             },
             navigateToMainScreen = { userId ->
-                navController.navigate(Screen.Main.passUserId(userId)) {
+                setupNavController.navigate(Screen.Main.passUserId(userId)) {
                     popUpTo(route = Screen.Login.route) {
                         inclusive = true
                     }
@@ -56,7 +68,7 @@ fun SetupNavGraph(
 
         register(
             navigateToLogin = {
-                navController.navigate(Screen.Login.route) {
+                setupNavController.navigate(Screen.Login.route) {
                     popUpTo(route = Screen.Register.route) {
                         inclusive = true
                     }
@@ -64,20 +76,30 @@ fun SetupNavGraph(
             }
         )
 
-        main()
+        main(
+            rootNavHostController = mainNavController
+        )
     }
 }
 
 fun NavGraphBuilder.splash(
-    navigateToLogin: () -> Unit
+    navigateToLogin: () -> Unit,
+    navigateToMain: (Int) -> Unit,
 ) {
     composable(
         route = Screen.Splash.route
     ) {
 
-        LaunchedEffect(key1 = true) {
+        val splashViewModel: SplashViewModel = hiltViewModel()
+        val state = splashViewModel.state.collectAsState().value
+
+        LaunchedEffect(key1 = state.onBoardSuccessfully) {
             delay(3500)
-            navigateToLogin()
+            if (state.onBoardSuccessfully && state.userId != -1) {
+                navigateToMain(state.userId)
+            } else {
+                navigateToLogin()
+            }
         }
 
         SplashScreen()
@@ -98,7 +120,7 @@ fun NavGraphBuilder.login(
             loginViewModel.uiEvent.collectLatest { event ->
                 when (event) {
                     is UiEvent.NavigateToMainScreen -> {
-                        navigateToMainScreen(event.id)
+                        navigateToMainScreen(event.userId)
                     }
 
                     else -> Unit
@@ -157,7 +179,7 @@ fun NavGraphBuilder.register(
     }
 }
 
-fun NavGraphBuilder.main() {
+fun NavGraphBuilder.main(rootNavHostController: NavHostController) {
     composable(
         route = Screen.Main.route,
         arguments = listOf(
@@ -168,6 +190,6 @@ fun NavGraphBuilder.main() {
             }
         )
     ) {
-        Text(text = "Main Screen")
+        MainScreen(rootNavHostController)
     }
 }

@@ -16,11 +16,12 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             ExpensesManagerTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier
                         .fillMaxSize()
@@ -28,8 +29,12 @@ class MainActivity : ComponentActivity() {
                         .navigationBarsPadding(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val navController = rememberNavController()
-                    SetupNavGraph(navController = navController)
+                    val setupNavController = rememberNavController()
+                    val mainNavController = rememberNavController()
+                    SetupNavGraph(
+                        setupNavController = setupNavController,
+                        mainNavController = mainNavController
+                    )
                 }
             }
         }
