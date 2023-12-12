@@ -7,4 +7,5 @@ interface DataStorePref {
 
     suspend fun saveUserOnBoard(userOnBoard: UserOnBoard)
     fun getUserOnBoard(): Flow<UserOnBoard>
+    suspend fun logoutUser()
 }

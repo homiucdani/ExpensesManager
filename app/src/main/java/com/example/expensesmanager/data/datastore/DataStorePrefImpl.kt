@@ -43,4 +43,11 @@ class DataStorePrefImpl(
             UserOnBoard(onBoardSuccessfully, userId)
         }
     }
+
+    override suspend fun logoutUser() {
+        dataStore.edit { pref ->
+            pref[PreferencesKey.onBoardSuccessfullyKey] = false
+            pref[PreferencesKey.userIdKey] = -1
+        }
+    }
 }

@@ -15,6 +15,7 @@ import com.example.expensesmanager.presentation.login.LoginEvent
 import com.example.expensesmanager.presentation.login.LoginScreen
 import com.example.expensesmanager.presentation.login.LoginViewModel
 import com.example.expensesmanager.presentation.main.MainScreen
+import com.example.expensesmanager.presentation.main.MainViewModel
 import com.example.expensesmanager.presentation.register.RegisterEvent
 import com.example.expensesmanager.presentation.register.RegisterScreen
 import com.example.expensesmanager.presentation.register.RegisterViewModel
@@ -77,8 +78,17 @@ fun SetupNavGraph(
         )
 
         main(
-            rootNavHostController = mainNavController
+            rootNavHostController = mainNavController,
+            navigateToLogin = {
+                setupNavController.navigate(Screen.Login.route) {
+                    popUpTo(route = Screen.Main.route) {
+                        inclusive = true
+                    }
+                }
+            }
         )
+
+        transaction()
     }
 }
 
@@ -179,7 +189,10 @@ fun NavGraphBuilder.register(
     }
 }
 
-fun NavGraphBuilder.main(rootNavHostController: NavHostController) {
+fun NavGraphBuilder.main(
+    rootNavHostController: NavHostController,
+    navigateToLogin: () -> Unit
+) {
     composable(
         route = Screen.Main.route,
         arguments = listOf(
@@ -190,6 +203,32 @@ fun NavGraphBuilder.main(rootNavHostController: NavHostController) {
             }
         )
     ) {
-        MainScreen(rootNavHostController)
+        val mainViewModel: MainViewModel = hiltViewModel()
+        val state = mainViewModel.state.collectAsState().value
+
+        LaunchedEffect(key1 = true) {
+            mainViewModel.uiEvent.collectLatest { event ->
+                when (event) {
+                    UiEvent.NavigateToLogin -> navigateToLogin()
+                    else -> Unit
+                }
+            }
+        }
+
+        MainScreen(
+            rootNavHostController = rootNavHostController,
+            onEvent = { event ->
+                mainViewModel.onEvent(event)
+            },
+            state = state
+        )
+    }
+}
+
+fun NavGraphBuilder.transaction() {
+    composable(
+        route = Screen.Transaction.route
+    ) {
+
     }
 }

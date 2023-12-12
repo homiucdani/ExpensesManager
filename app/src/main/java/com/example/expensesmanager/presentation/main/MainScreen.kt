@@ -15,7 +15,9 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun MainScreen(
-    rootNavHostController: NavHostController
+    rootNavHostController: NavHostController,
+    state: MainState,
+    onEvent: (MainEvent) -> Unit
 ) {
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -23,7 +25,8 @@ fun MainScreen(
 
     MainScreenNavDrawer(
         modifier = Modifier.fillMaxSize(),
-        username = "Daniel",
+        username = state.username,
+        isLoggingOff = state.loggingOff,
         drawerState = { drawerState },
         onMainPageClick = {
             coroutineScope.launch {
@@ -41,7 +44,7 @@ fun MainScreen(
             //TODO: navigate to converter screen
         },
         onLogoutClick = {
-            //TODO: logout user
+            onEvent(MainEvent.Logout)
         },
         content = {
             MainScreenContent(

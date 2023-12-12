@@ -35,6 +35,7 @@ import com.example.expensesmanager.ui.theme.dimens
 fun MainScreenNavDrawer(
     modifier: Modifier = Modifier,
     username: String,
+    isLoggingOff: Boolean,
     drawerState: () -> DrawerState,
     onMainPageClick: () -> Unit,
     onConverterClick: () -> Unit,
@@ -131,7 +132,9 @@ fun MainScreenNavDrawer(
                         },
                         selected = false,
                         onClick = {
-                            onLogoutClick()
+                            if (!isLoggingOff){
+                                onLogoutClick()
+                            }
                         }
                     )
                 }

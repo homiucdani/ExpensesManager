@@ -9,11 +9,14 @@ sealed class Screen(val route: String) {
         fun passUserId(userId: Int) = "main_screen/$userId"
     }
 
-    object Budget : Screen("budget_screen"){
+    object Budget : Screen("budget_screen") {
         fun passUserId(userId: Int) = "budget_screen/$userId"
     }
-    object Expenses : Screen("expenses_screen"){
+
+    object Expenses : Screen("expenses_screen") {
         fun passUserId(userId: Int) = "expenses_screen/$userId"
     }
+
+    object Transaction : Screen("transaction_screen")
 
 }
