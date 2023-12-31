@@ -39,6 +39,8 @@ class MainViewModel @Inject constructor(
             MainEvent.Logout -> {
                 logoutUser()
             }
+
+            else -> Unit
         }
     }
 
@@ -50,6 +52,7 @@ class MainViewModel @Inject constructor(
                 withContext(Dispatchers.Main) {
                     _state.update {
                         it.copy(
+                            userId = userId,
                             username = user.name
                         )
                     }

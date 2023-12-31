@@ -17,6 +17,8 @@ sealed class Screen(val route: String) {
         fun passUserId(userId: Int) = "expenses_screen/$userId"
     }
 
-    object Transaction : Screen("transaction_screen")
+    object Transaction : Screen("transaction_screen/{userId}") {
+        fun passUserId(userId: Int) = "transaction_screen/$userId"
+    }
 
 }

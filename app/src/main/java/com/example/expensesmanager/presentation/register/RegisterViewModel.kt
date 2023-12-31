@@ -96,7 +96,7 @@ class RegisterViewModel @Inject constructor(
                 } else {
                     userRepository.insertUser(
                         User(
-                            id = 0,
+                            userId = 0,
                             name = name,
                             email = email,
                             password = password

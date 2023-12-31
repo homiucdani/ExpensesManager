@@ -17,4 +17,14 @@
     <string name="logout">Logout</string>
     <string name="my_budget">My Budget</string>
     <string name="my_expenses">My Expenses</string>
+    <string name="date">Date</string>
+    <string name="save">Save</string>
+    <string name="add_date">Add date</string>
+    <string name="add_action">Add action</string>
+    <string name="edit_action">Edit action</string>
+    <string name="amount">Amount</string>
+    <string name="enter_amount">Enter amount</string>
+    <string name="category">Category</string>
+    <string name="details">Details</string>
+    <string name="more_information">More information</string>
 </resources>

@@ -3,6 +3,7 @@ package com.example.expensesmanager.di
 import com.example.expensesmanager.domain.use_case.FormValidation
 import com.example.expensesmanager.domain.use_case.ValidateLoginForm
 import com.example.expensesmanager.domain.use_case.ValidateRegisterForm
+import com.example.expensesmanager.domain.use_case.ValidateTransactionForm
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,5 +21,11 @@ object UseCaseModule {
             validateLoginForm = ValidateLoginForm(),
             validateRegisterForm = ValidateRegisterForm()
         )
+    }
+
+    @Singleton
+    @Provides
+    fun providesTransactionForm(): ValidateTransactionForm {
+        return ValidateTransactionForm()
     }
 }

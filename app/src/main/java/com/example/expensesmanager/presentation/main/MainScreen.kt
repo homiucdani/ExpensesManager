@@ -55,7 +55,7 @@ fun MainScreen(
                     }
                 },
                 onActionClick = {
-                    //TODO: navigate to action screen
+                    onEvent(MainEvent.NavigateToTransaction)
                 }
             )
         }
