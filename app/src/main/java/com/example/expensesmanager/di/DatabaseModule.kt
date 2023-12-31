@@ -4,8 +4,11 @@ import android.content.Context
 import androidx.room.Room
 import com.example.expensesmanager.core.domain.util.Constants
 import com.example.expensesmanager.data.local.ExpensesDatabase
+import com.example.expensesmanager.data.local.dao.TransactionDao
 import com.example.expensesmanager.data.local.dao.UserDao
+import com.example.expensesmanager.data.repository.TransactionRepositoryImpl
 import com.example.expensesmanager.data.repository.UserRepositoryImpl
+import com.example.expensesmanager.domain.repository.TransactionRepository
 import com.example.expensesmanager.domain.repository.UserRepository
 import dagger.Module
 import dagger.Provides
@@ -42,5 +45,21 @@ object DatabaseModule {
         userDao: UserDao
     ): UserRepository {
         return UserRepositoryImpl(userDao)
+    }
+
+    @Provides
+    @Singleton
+    fun providesTransactionDao(
+        expensesDatabase: ExpensesDatabase
+    ): TransactionDao {
+        return expensesDatabase.transactionDao()
+    }
+
+    @Provides
+    @Singleton
+    fun providesTransactionRepository(
+        transactionDao: TransactionDao
+    ): TransactionRepository {
+        return TransactionRepositoryImpl(transactionDao)
     }
 }

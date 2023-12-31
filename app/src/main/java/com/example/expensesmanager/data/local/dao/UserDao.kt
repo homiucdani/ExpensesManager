@@ -15,12 +15,12 @@ interface UserDao {
     @Query("SELECT * FROM users WHERE email = :email")
     suspend fun getUserByEmail(email: String): UserEntity?
 
-    @Query("SELECT * FROM users WHERE id = :id")
+    @Query("SELECT * FROM users WHERE userId = :id")
     suspend fun getUserById(id: Int): UserEntity
 
     @Query("SELECT * FROM users WHERE email = :email AND password = :password")
     suspend fun login(email: String, password: String): UserEntity?
 
-    @Query("DELETE FROM users WHERE id = :id")
+    @Query("DELETE FROM users WHERE userId = :id")
     suspend fun deleteUserById(id: Int)
 }

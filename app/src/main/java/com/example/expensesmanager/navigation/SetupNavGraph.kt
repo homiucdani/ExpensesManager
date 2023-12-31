@@ -1,5 +1,7 @@
 package com.example.expensesmanager.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -9,11 +11,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.expensesmanager.core.presentation.util.UiEvent
 import com.example.expensesmanager.presentation.login.LoginEvent
 import com.example.expensesmanager.presentation.login.LoginScreen
 import com.example.expensesmanager.presentation.login.LoginViewModel
+import com.example.expensesmanager.presentation.main.MainEvent
 import com.example.expensesmanager.presentation.main.MainScreen
 import com.example.expensesmanager.presentation.main.MainViewModel
 import com.example.expensesmanager.presentation.register.RegisterEvent
@@ -21,13 +25,16 @@ import com.example.expensesmanager.presentation.register.RegisterScreen
 import com.example.expensesmanager.presentation.register.RegisterViewModel
 import com.example.expensesmanager.presentation.splash.SplashScreen
 import com.example.expensesmanager.presentation.splash.SplashViewModel
+import com.example.expensesmanager.presentation.transaction.TransactionEvent
+import com.example.expensesmanager.presentation.transaction.TransactionScreen
+import com.example.expensesmanager.presentation.transaction.TransactionViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SetupNavGraph(
     setupNavController: NavHostController,
-    mainNavController: NavHostController
 ) {
     NavHost(
         navController = setupNavController,
@@ -78,17 +85,25 @@ fun SetupNavGraph(
         )
 
         main(
-            rootNavHostController = mainNavController,
             navigateToLogin = {
                 setupNavController.navigate(Screen.Login.route) {
                     popUpTo(route = Screen.Main.route) {
                         inclusive = true
                     }
                 }
+            },
+            navigateToTransaction = { userId ->
+                setupNavController.navigate(Screen.Transaction.passUserId(userId)) {
+                    launchSingleTop = true
+                }
             }
         )
 
-        transaction()
+        transaction(
+            onBackPressed = {
+                setupNavController.popBackStack()
+            }
+        )
     }
 }
 
@@ -154,7 +169,7 @@ fun NavGraphBuilder.login(
 }
 
 fun NavGraphBuilder.register(
-    navigateToLogin: () -> Unit,
+    navigateToLogin: () -> Unit
 ) {
     composable(
         route = Screen.Register.route
@@ -190,8 +205,8 @@ fun NavGraphBuilder.register(
 }
 
 fun NavGraphBuilder.main(
-    rootNavHostController: NavHostController,
-    navigateToLogin: () -> Unit
+    navigateToLogin: () -> Unit,
+    navigateToTransaction: (userId: Int) -> Unit
 ) {
     composable(
         route = Screen.Main.route,
@@ -202,7 +217,10 @@ fun NavGraphBuilder.main(
                 type = NavType.IntType
             }
         )
-    ) {
+    ) { backStack ->
+
+        val userId = backStack.arguments?.getInt("userId")
+        val mainNavController = rememberNavController()
         val mainViewModel: MainViewModel = hiltViewModel()
         val state = mainViewModel.state.collectAsState().value
 
@@ -216,19 +234,54 @@ fun NavGraphBuilder.main(
         }
 
         MainScreen(
-            rootNavHostController = rootNavHostController,
+            rootNavHostController = mainNavController,
             onEvent = { event ->
-                mainViewModel.onEvent(event)
+                when (event) {
+                    MainEvent.NavigateToTransaction -> {
+                        userId?.let { id ->
+                            navigateToTransaction(id)
+                        }
+                    }
+
+                    else -> mainViewModel.onEvent(event)
+                }
             },
             state = state
         )
     }
 }
 
-fun NavGraphBuilder.transaction() {
+@RequiresApi(Build.VERSION_CODES.O)
+fun NavGraphBuilder.transaction(
+    onBackPressed: () -> Unit
+) {
     composable(
-        route = Screen.Transaction.route
-    ) {
+        route = Screen.Transaction.route,
+        arguments = listOf(
+            navArgument(
+                name = "userId"
+            ) {
+                type = NavType.IntType
+            }
+        )
+    ) { backStack ->
 
+        val userId = backStack.arguments?.getInt("userId")
+        val transactionViewModel: TransactionViewModel = hiltViewModel()
+        val state = transactionViewModel.state.collectAsState().value
+
+        TransactionScreen(
+            transactionId = userId,
+            state = state,
+            onEvent = { event ->
+                when (event) {
+                    TransactionEvent.OnBackClick -> {
+                        onBackPressed()
+                    }
+
+                    else -> transactionViewModel.onEvent(event)
+                }
+            }
+        )
     }
 }

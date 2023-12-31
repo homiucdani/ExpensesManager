@@ -5,12 +5,12 @@ import com.example.expensesmanager.domain.model.User
 
 fun UserEntity.toUser(): User {
     return User(
-        id, name, email, password
+        userId, name, email, password
     )
 }
 
 fun User.toUserEntity(): UserEntity {
     return UserEntity(
-        id, name, email, password
+        userId, name, email, password
     )
 }

@@ -77,12 +77,12 @@ class LoginViewModel @Inject constructor(
                         dataStorePref.saveUserOnBoard(
                             UserOnBoard(
                                 onBoardSuccessfully = true,
-                                userId = user.id
+                                userId = user.userId
                             )
                         )
 
                         // navigate to main with the id if the user exists
-                        _uiEvent.emit(UiEvent.NavigateToMainScreen(user.id))
+                        _uiEvent.emit(UiEvent.NavigateToMainScreen(user.userId))
 
                         _state.update {
                             it.copy(
